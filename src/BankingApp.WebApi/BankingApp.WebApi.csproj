@@ -7,7 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.11.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BankingApp.Application\BankingApp.Application.csproj" />
+      <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
+      <ProjectReference Include="..\BankingApp.DataAccess\BankingApp.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>
