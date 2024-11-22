@@ -25,5 +25,12 @@ public class DbAccount
     
     
     public Account ToCoreEntity() => new Account(
-        Iban, Currency, Amount, CreatedAt);
+        Id, Iban, Currency, Amount, CreatedAt);
+
+    public static DbAccount FromCoreEntity(Account account)
+        => new DbAccount
+        {
+            Id = account.Id, Iban = account.Iban, Currency = account.Currency, Amount = account.Amount,
+            CreatedAt = account.CreatedAt
+        };
 }

@@ -11,4 +11,8 @@
       <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="IbanNet" Version="5.16.1" />
+    </ItemGroup>
+
 </Project>

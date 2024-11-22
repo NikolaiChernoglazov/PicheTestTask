@@ -1,5 +1,5 @@
 using System.Net;
-using BankingApp.Application.DataAccess;
+using BankingApp.Application;
 using BankingApp.Core;
 using BankingApp.WebApi.Controllers;
 using BankingApp.WebApi.ResponseBuilding;
@@ -18,7 +18,7 @@ namespace BankingApp.WebApi.UnitTests.Controllers;
 public class AccountsControllerTests
 {
     private readonly Mock<IResponseBuilder> _responseBuilder;
-    private readonly Mock<IAccountsRepository> _accountsRepository;
+    private readonly Mock<IAccountManager> _accountManager;
     private readonly Mock<IIbanValidator> _ibanValidator;
     private readonly Mock<IValidator<CreateAccountRequest>> _createAccountRequestValidator;
     private readonly AccountsController _accountsController;
@@ -27,12 +27,12 @@ public class AccountsControllerTests
     {
         var mockRepository = new MockRepository(MockBehavior.Strict);
         _responseBuilder = mockRepository.Create<IResponseBuilder>();
-        _accountsRepository = mockRepository.Create<IAccountsRepository>();
+        _accountManager = mockRepository.Create<IAccountManager>();
         _ibanValidator = mockRepository.Create<IIbanValidator>();
         _createAccountRequestValidator = mockRepository.Create<IValidator<CreateAccountRequest>>();
         
         _accountsController = new AccountsController(
-            _responseBuilder.Object, _accountsRepository.Object, _ibanValidator.Object, _createAccountRequestValidator.Object);
+            _responseBuilder.Object, _accountManager.Object, _ibanValidator.Object, _createAccountRequestValidator.Object);
     }
     
     
@@ -44,7 +44,7 @@ public class AccountsControllerTests
         ErrorOr<List<Account>> result = new List<Account>();
         var expectedResponse = new OkObjectResult(result.Value);
         
-        _accountsRepository.Setup(ar => ar.GetAlLAsync(cancellationToken))
+        _accountManager.Setup(ar => ar.GetAlLAsync(cancellationToken))
             .ReturnsAsync(result);
         _responseBuilder.Setup(r => r.BuildResultResponse(result, HttpStatusCode.OK))
             .Returns(expectedResponse);
@@ -92,13 +92,13 @@ public class AccountsControllerTests
         var cancellationToken = CancellationToken.None;
         var validationResult = new FluentValidation.Results.ValidationResult();
         ErrorOr<Account> result = 
-            new Account(string.Empty, string.Empty, 0, DateTimeOffset.MinValue);
+            new Account(1, string.Empty, string.Empty, 0, DateTimeOffset.MinValue);
         var expectedResponse = new OkObjectResult(result.Value);
         
         _createAccountRequestValidator.Setup(
             v => v.ValidateAsync(request, cancellationToken))
             .ReturnsAsync(validationResult);
-        _accountsRepository.Setup(ar => ar.CreateAsync(request, cancellationToken))
+        _accountManager.Setup(ar => ar.CreateAsync(request, cancellationToken))
             .ReturnsAsync(result);
         _responseBuilder.Setup(r => r.BuildResultResponse(result, HttpStatusCode.Created))
             .Returns(expectedResponse);
@@ -147,12 +147,12 @@ public class AccountsControllerTests
         var cancellationToken = CancellationToken.None;
         var validationResult = new IbanNet.ValidationResult();
         ErrorOr<Account> result = 
-            new Account(string.Empty, string.Empty, 0, DateTimeOffset.MinValue);
+            new Account(1, string.Empty, string.Empty, 0, DateTimeOffset.MinValue);
         var expectedResponse = new OkObjectResult(result.Value);
         
         _ibanValidator.Setup(v => v.Validate(request))
             .Returns(validationResult);
-        _accountsRepository.Setup(ar => ar.GetByIbanAsync(request, cancellationToken))
+        _accountManager.Setup(ar => ar.GetByIbanAsync(request, cancellationToken))
             .ReturnsAsync(result);
         _responseBuilder.Setup(r => r.BuildResultResponse(result, HttpStatusCode.OK))
             .Returns(expectedResponse);

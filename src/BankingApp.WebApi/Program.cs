@@ -20,10 +20,13 @@ builder.Services.AddSwaggerGen();
 var services = builder.Services;
 services.AddScoped<IResponseBuilder, ResponseBuilder>();
 services.AddScoped<IAccountsRepository, AccountsRepository>();
-services.AddScoped<ICurrencyInfoProvider, CurrencyInfoProvider>();
+services.AddScoped<ILimitsProvider, LimitsProvider>();
 services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountRequestValidator>();
+services.AddScoped<IValidator<DepositRequest>, DepositRequestValidator>();
+services.AddScoped<IValidator<TransferRequest>, TransferRequestValidator>();
 services.AddScoped<IIbanGenerator, IbanGenerator>();
 services.AddScoped<IIbanValidator, IbanValidator>();
+services.AddScoped<IAccountManager, AccountManager>();
 
 services.AddDbContext<BankingDbContext>();
 

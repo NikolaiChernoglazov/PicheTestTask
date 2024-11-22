@@ -16,14 +16,17 @@ public class AccountsRepository(
     {
         try
         {
-            var entity = await dbContext.Accounts.FirstOrDefaultAsync(
+            var dbEntity = await dbContext.Accounts.FirstOrDefaultAsync(
                 x => x.Iban == iban.ToUpper(), cancellationToken);
-            if (entity is null)
+            if (dbEntity is null)
             {
                 return Error.NotFound($"Account with IBAN {iban} is not found");
             }
 
-            return entity.ToCoreEntity();
+            var entity = dbEntity.ToCoreEntity();
+            dbContext.Entry(dbEntity).State = EntityState.Detached;
+
+            return entity;
         }
         catch (Exception e)
         {
@@ -45,21 +48,31 @@ public class AccountsRepository(
         }
     }
 
-    public async Task<ErrorOr<Account>> CreateAsync(CreateAccountRequest createAccountRequest, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Account>> AddOrUpdateAsync(Account entity, CancellationToken cancellationToken)
     {
         try
         {
-            var entity = new DbAccount
-            {
-                // Probably it is more correct to generate it
-                // at the Application layer, but let's do it here for simplicity
-                Iban = ibanGenerator.Generate("UA").ToString(),
-                Currency = createAccountRequest.Currency,
-                CreatedAt = DateTimeOffset.Now,
-            };
-            dbContext.Accounts.Add(entity);
+            var dbEntity = DbAccount.FromCoreEntity(entity);
+            dbContext.Accounts.Update(dbEntity);
             await dbContext.SaveChangesAsync(cancellationToken);
-            return entity.ToCoreEntity();
+            return dbEntity.ToCoreEntity();
+        }
+        catch (Exception e)
+        {
+            return Error.Unexpected(description: e.Message);
+        }
+    }
+
+    public async Task<ErrorOr<List<Account>>> UpdateManyAsync(
+        List<Account> accounts, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var dbEntities = accounts.Select(DbAccount.FromCoreEntity).ToList();
+            dbContext.Accounts.UpdateRange(dbEntities);
+            // SaveChanges has a transaction inside, so we don't worry about that
+            await dbContext.SaveChangesAsync(cancellationToken);
+            return dbEntities.Select(e => e.ToCoreEntity()).ToList();
         }
         catch (Exception e)
         {
