@@ -20,7 +20,7 @@ public class AccountsRepository(
                 x => x.Iban == iban.ToUpper(), cancellationToken);
             if (dbEntity is null)
             {
-                return Error.NotFound($"Account with IBAN {iban} is not found");
+                return Error.NotFound(description: $"Account with IBAN {iban} was not found");
             }
 
             var entity = dbEntity.ToCoreEntity();

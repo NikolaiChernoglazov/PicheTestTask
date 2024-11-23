@@ -95,7 +95,8 @@ public class AccountManager(
 
         if (toAccount.Currency != fromAccount.Currency)
         {
-            return Error.Forbidden("Transfer between accounts with different currencies is not supported.");
+            // In production, we can implement currency exhange logic, requesting exchange rates from some external API 
+            return Error.Forbidden(description: "Transfer between accounts with different currencies is not supported.");
         }
         
         var accountLimit = limitsProvider.GetMaxAllowedAccountAmount();

@@ -10,6 +10,8 @@ public class ResponseBuilder : IResponseBuilder
     private static readonly Dictionary<ErrorType, HttpStatusCode>
         StatusCodeMapping = new()
         {
+            { ErrorType.NotFound, HttpStatusCode.NotFound },
+            { ErrorType.Forbidden, HttpStatusCode.Forbidden },
             { ErrorType.Unexpected, HttpStatusCode.InternalServerError }
         };
     
