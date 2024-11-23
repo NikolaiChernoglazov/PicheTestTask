@@ -42,7 +42,7 @@ public class AccountsController(
 
     [HttpPost("/new")]
     public async Task<ActionResult> CreateAsync(
-        CreateAccountRequest createAccountRequest,
+        [FromBody] CreateAccountRequest createAccountRequest,
         CancellationToken cancellationToken)
     {
         var validationResult = await createAccountRequestValidator.ValidateAsync(createAccountRequest, cancellationToken);
