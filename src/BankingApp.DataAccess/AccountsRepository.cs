@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BankingApp.DataAccess;
 
 public class AccountsRepository(
-    BankingDbContext dbContext,
-    IIbanGenerator ibanGenerator) : IAccountsRepository
+    BankingDbContext dbContext) : IAccountsRepository
 {
     public async Task<ErrorOr<Account>> GetByIbanAsync(string iban,
         CancellationToken cancellationToken)
