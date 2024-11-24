@@ -29,7 +29,7 @@ services.AddScoped<ILimitsProvider, LimitsProvider>();
 services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountRequestValidator>();
 services.AddScoped<IValidator<DepositRequest>, DepositRequestValidator>();
 services.AddScoped<IValidator<TransferRequest>, TransferRequestValidator>();
-services.AddScoped<IIbanGenerator, IbanGenerator>();
+services.AddScoped<IIbanProvider, IbanProvider>();
 services.AddScoped<IIbanValidator, IbanValidator>();
 services.AddScoped<IAccountManager, AccountManager>();
 

@@ -1,13 +1,12 @@
 using BankingApp.Application.DataAccess;
 using BankingApp.Core;
 using ErrorOr;
-using IbanNet.Registry;
 
 namespace BankingApp.Application;
 
 public class AccountManager(
     IAccountsRepository accountsRepository,
-    IIbanGenerator ibanGenerator,
+    IIbanProvider ibanGenerator,
     ILimitsProvider limitsProvider) : IAccountManager
 {
     public Task<ErrorOr<Account>> GetByIbanAsync(string iban, CancellationToken cancellationToken)
@@ -23,7 +22,7 @@ public class AccountManager(
     public Task<ErrorOr<Account>> CreateAsync(CreateAccountRequest createAccountRequest, CancellationToken cancellationToken)
     {
         var entity = new Account(0,
-            ibanGenerator.Generate("UA").ToString(),
+            ibanGenerator.Generate("UA"),
             createAccountRequest.Currency,
             createAccountRequest.Amount,
             DateTimeOffset.Now);
