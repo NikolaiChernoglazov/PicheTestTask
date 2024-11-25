@@ -30,7 +30,7 @@ public class DbAccount
     public static DbAccount FromCoreEntity(Account account)
         => new DbAccount
         {
-            Id = account.Id, Iban = account.Iban, Currency = account.Currency, Amount = account.Amount,
+            Id = account.Id, Iban = account.Iban, Currency = account.Currency.ToUpper(), Amount = account.Amount,
             CreatedAt = account.CreatedAt
         };
 }
