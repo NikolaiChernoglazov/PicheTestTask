@@ -16,4 +16,4 @@ This is a test assignment provided by Piche company.
 - The main task of this project is to show how I write code. I didn't want to spend too much time on it, so it lacks features like logging, integration tests, some unit tests and code best practices (like using viewmoels in responses to hide details such as database ID.)
 - In production, I would have asked clarifying questions about exact requirements, but I didn't want to bother you with them, as it is only a test task.
 - I wanted to show how I work with some logic anyway, so it became more complex that a simple 2-day task task (TBH I don't think 2 days is enough for such kind of tasks, otherwise than writing code, you need to spend some time on testing)
-- The cod uses ErrorOr library instead of exceptions, because exceptions are expensive performance-wise
+- The code uses ErrorOr library instead of exceptions, because exceptions are expensive performance-wise
